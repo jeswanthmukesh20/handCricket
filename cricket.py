@@ -13,16 +13,13 @@ class Validator:
                         return inp
                     elif smaller > inp:
                         print(f'\nYour value should be greater than {smaller}')
-                    elif greater < inp:
+                    else:
                         print(f'\nYour value should be lesser than {greater}')
                 else:
                     print('\nEnter valid input!')
                 i += 1
                 if i > 3:
                     print('\nToo many tries!')
-            if i > 3:
-                raise ValueError
-
         else:
             i = 1
             while i <= 3:
@@ -32,14 +29,14 @@ class Validator:
                     if inp in team:
                         return inp
                     else:
-                        print(f'\nEnter valid team name correctly!')
+                        print('\nEnter valid team name correctly!')
                 else:
                     print('\nEnter valid input!')
                 i += 1
                 if i > 3:
                     print('\nToo many tries!')
-            if i > 3:
-                raise ValueError
+        if i > 3:
+            raise ValueError
 
 
 class Player(Validator):
@@ -77,12 +74,11 @@ class Game(Validator):
             tos = input('[O/E]').lower()
             if not tos.isalpha():
                 print('\nThe choice is only string!')
+            elif tos in ['odd', 'od', 'o', 'even', 'eve', 'e']:
+                print('\nFine!')
+                break
             else:
-                if tos in ['odd', 'od', 'o', 'even', 'eve', 'e']:
-                    print('\nFine!')
-                    break
-                else:
-                    print('\nEnter valid input!')
+                print('\nEnter valid input!')
             i += 1
         if i > 3:
             raise ValueError
@@ -95,21 +91,17 @@ class Game(Validator):
 
         bot = random.randint(1, 6)
         ans = (choice + bot) % 2
-        if self.toss in ['odd', 'od', 'o']:
-            if ans != 0:
-                self.winner = 'Human'
-                print(f'\n{player1.Team} won the toss!')
-            else:
-                self.winner = 'Bot'
-                print(f'\n{player2.Team} won the toss!')
+        if (
+            self.toss in ['odd', 'od', 'o']
+            and ans != 0
+            or self.toss not in ['odd', 'od', 'o']
+            and ans == 0
+        ):
+            self.winner = 'Human'
+            print(f'\n{player1.Team} won the toss!')
         else:
-            if ans != 0:
-                self.winner = 'Bot'
-                print(f'\n{player2.Team} won the toss!')
-            else:
-                self.winner = 'Human'
-                print(f'\n{player1.Team} won the toss!')
-
+            self.winner = 'Bot'
+            print(f'\n{player2.Team} won the toss!')
         if self.winner == 'Human':
             while True:
                 bat_or = input('\nBatting or Bowling?\t').lower()
@@ -117,11 +109,10 @@ class Game(Validator):
                     if bat_or in ['batting', 'bat', 'ba']:
                         self.first = player1.Team
                         print(f'{player1.Team} won the toss and choose to bat first!')
-                        break
                     else:
                         self.first = player2.Team
                         print(f'{player1.Team} won the toss and choose to bowl!')
-                        break
+                    break
         else:
             bot_choice = random.choice(['bat', 'bowl'])
             if bot_choice == 'bat':
@@ -208,7 +199,7 @@ class Game(Validator):
                     bot = self.input_validator(greater=6, smaller=1)
                     if score != bot:
                         player2.score += score
-                    elif score == bot:
+                    else:
                         player2.players -= 1
                         print("\nThat's a wicket!")
                     if self.over[1] < 5:
